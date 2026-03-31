@@ -11,7 +11,7 @@
 
 using namespace std;       // so we don't have to type out "std::" all the time.
 
-// Where progran starts running code.
+// Where program starts running code.
 int main() {
     // var at the top is best practice.
     string playerName;              // var uses camelCase
@@ -21,10 +21,10 @@ int main() {
     // get input from the player using C in
     cin >> playerName;
 
-    cout << "Hello " <<playerName << "." << endl;
+    cout << "Hello " << playerName << "." << endl;
 
     //cout << "Hello World" << endl;      // C out for "Console out"
                                         // end L for "End line"
 
-    return 0;                           // Program ran successfully
+    return 0;                           // program ran successfully
 }
