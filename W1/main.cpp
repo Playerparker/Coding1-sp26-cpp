@@ -14,8 +14,8 @@ int main() {
     //Defining a variable means giving it a value.
     int playerAge = -1;             //int whole numbers
     string playerName = ""; //strings are for words and letters
-    float playerHeight = 1.8f;       // Hight in meters
-    bool playAgain = true;          // true or false statements
+    float playerHeight = 1.8f;      // Hight in meters
+    bool playAgain = true;          // True or false statements
 
     // if statement is a branch in unreal engine.
     if (playerAge == -1) {
