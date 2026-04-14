@@ -11,101 +11,136 @@ using namespace std;
 int main () {
     cout << "Let's learn about vectors!\n";
 
-    int chapter = 0;
-    cout << "\nWhat chapter would you like to run?\n";
-    cout << "\nPress 1 for Vectors.\n";
-    cout << "\nPress 2 fo push_back and pop_back().\n";
-    cout << "\nPress 3 for algorithims.\n";
+    // for chapter 4
+    vector<string> favs = {"Zelda", "Mario", "Metroid"};
 
-    cin >> chapter;
+    do {
 
-    if (chapter == 1) {
-        // Collection initalizer
-        vector<string> names = {"Ace",
-                                "King", 
-                                "Queen", 
-                                "Jack", 
-                                "Joker"};
-        
-        cout << "\nThere are " << names.size() << " in the vector\n";
-        cout << "\nHere are your names:\n";
+        int chapter = 0;
+        cout << "\nWhat chapter would you like to run?\n";
+        cout << "\nPress 1 for Vectors.\n";
+        cout << "\nPress 2 fo push_back and pop_back().\n";
+        cout << "\nPress 3 for algorithims.\n";
+        cout << "\nPress 4 for removing.\n";
 
-        for(int i = 0; i < names.size(); i++) {
-            cout << i + 1 << ". " << names [i] << "\n";
-        }
+        cin >> chapter;
 
-        cout << "\nthe first name in the vector is " << *(names.begin()) << ".\n";
+        if (chapter == 1) {
+            // Collection initalizer
+            vector<string> names = {"Ace",
+                                    "King", 
+                                    "Queen", 
+                                    "Jack", 
+                                    "Joker"};
+            
+            cout << "\nThere are " << names.size() << " in the vector\n";
+            cout << "\nHere are your names:\n";
 
-        //making out first iterator, it's a pointer to an element in a vector.
-        vector<string>::iterator iter;
+            for(int i = 0; i < names.size(); i++) {
+                cout << i + 1 << ". " << names [i] << "\n";
+            }
 
-        iter = names.begin() + 2;
+            cout << "\nthe first name in the vector is " << *(names.begin()) << ".\n";
 
-        cout << "\niter is pointing at " << *iter << ".\n";
+            //making out first iterator, it's a pointer to an element in a vector.
+            vector<string>::iterator iter;
 
-    } // end of chapter 1
-    if(chapter == 2) {
-        cout << "\nLet's use push_back and pop_back().\n";
+            iter = names.begin() + 2;
 
-        vector<string> faveMovies;
+            cout << "\niter is pointing at " << *iter << ".\n";
 
-        while (faveMovies.size() < 3) {
-            cout << "\nplease add a favorite movie: ";
+        } // end of chapter 1
+        if(chapter == 2) {
+            cout << "\nLet's use push_back and pop_back().\n";
+
+            vector<string> faveMovies;
+
+            while (faveMovies.size() < 3) {
+                cout << "\nplease add a favorite movie: ";
+                string input;
+                cin >> input;
+                //getline(cin, input);
+
+                faveMovies.push_back(input);
+            }
+
+            cout << "\nHere are you favorite movies: \n";
+            // use a for loop with iter to move through the vector
+            for(vector<string>::iterator iter = faveMovies.begin(); iter != faveMovies.end(); iter++) {
+                cout << *iter << endl; 
+            }
+        } // end of chapter 2
+        if (chapter == 3){
+            vector<string> friends;
+
+            friends.push_back("Joey");
+            friends.push_back("Bowie");
+            friends.push_back("Randal");
+            friends.push_back("Daniel");
+            friends.push_back("Zach");
+            friends.push_back("Gregg");
+
+            cout << "here are your friends:\n";
+            for(int i = 0; i < friends.size(); i ++) {
+                cout << friends[i] << ".\n";
+            }
+
+            cout << "Please choose a friend to go visit:\n";
+            vector<string>::iterator chosenFriend;
+
             string input;
             cin >> input;
-            //getline(cin, input);
 
-            faveMovies.push_back(input);
-        }
+            //use algorithim
+            chosenFriend = find(friends.begin(), friends.end(), input);
 
-        cout << "\nHere are you favorite movies: \n";
-        // use a for loop with iter to move through the vector
-        for(vector<string>::iterator iter = faveMovies.begin(); iter != faveMovies.end(); iter++) {
-            cout << *iter << endl; 
-        }
-    }
-    if (chapter == 3){
-        vector<string> friends;
+            if(chosenFriend != friends.end()) {
 
-        friends.push_back("Joey");
-        friends.push_back("Bowie");
-        friends.push_back("Randal");
-        friends.push_back("Daniel");
-        friends.push_back("Zach");
-        friends.push_back("Gregg");
+            cout << "\nLet's talk to " << *chosenFriend << " today!\n";
+            }
+            else {
+                cout << "\nI couldn't find " << input << " in your friends.\n";
+            }
 
-        cout << "here are your friends:\n";
-        for(int i = 0; i < friends.size(); i ++) {
-            cout << friends[i] << ".\n";
-        }
+            cout << "\nLet's give " << *chosenFriend << " a new name!\n";
+            cin >> input;
+            *chosenFriend = input;
 
-        cout << "Please choose a friend to go visit:\n";
-        vector<string>::iterator chosenFriend;
+            cout << "\nTheir name is now " << *chosenFriend << ".\n";
 
-        string input;
-        cin >> input;
+        } // end of chapter 3
+        if (chapter == 4) {
+            cout << "\nlet's remove an element from a global vector. (global-ish)\n";
 
-        //use algorithim
-        chosenFriend = find(friends.begin(), friends.end(), input);
+            // DONE create a vector of strings at the top of main.
+            // show faves.
+            sort(favs.begin(), favs.end());
+            for(int i = 0; i < favs.size(); i++) {
+                cout << favs[i] << endl;
+            }
+            // use cin to find the name to remove.
+            cout << "\nWhat name should we remove from favs?\n";
+            string input;
+            cin >> input;
 
-        if(chosenFriend != friends.end()) {
+            auto iter = find(favs.begin(), favs.end(), input);
 
-        cout << "\nLet's talk to " << *chosenFriend << " today!\n";
-        }
+            if (iter != favs.end()) {
+                cout << "\nFound it!\n";
+                favs.erase(iter); // remove an element from the vector at the place it's pointing at
+            }
+            else {
+                cout << "\nI could not find that name in favs.\n";
+            }
+
+
+            // use vec.erase(letter) to remove a name.
+
+        } // end of chapter 4
         else {
-            cout << "\nI couldn't find " << input << " in your friends.\n";
+            cout << "\n" << chapter << " isn't one of the options.\n";
         }
 
-        cout << "\nLet's give " << *chosenFriend << " a new name!\n";
-        cin >> input;
-        *chosenFriend = input;
+    } while (true);
 
-        cout << "\nTheir name is now " << *chosenFriend << ".\n";
-
-    }
-    else {
-        cout << "\n" << chapter << " isn't one of the options.\n";
-    }
-
-    
 }
