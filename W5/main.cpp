@@ -41,7 +41,7 @@ public:
     }
 
     void status() {
-        cout << "Current status: \n\n" << "Registered name: " << name << "\n\nCurrent charge: " << charge << "\n";
+        cout << "\nCurrent status: \n\n" << "Registered name: " << name << "\n\nCurrent charge: " << charge << "\n";
         cout << "\nI am ";
 
         if(boredom < 5) {
@@ -96,6 +96,10 @@ public:
         }
     }
 
+    void changeChargeBy(int amount) {
+        setCharge(charge += amount);
+    }
+
     string getName() {
         return name;
     }
@@ -113,25 +117,21 @@ int main () {
     //our new robots
     robot astro("Astro Boy", 100, 6);
 
-    robot beetwo;
+    robot beetwo("B-2", 25, 6);
     beetwo.setName("B-2");
-    beetwo.setCharge(75);
+    beetwo.setCharge(25);
     beetwo.setBore(3);
 
+    cout << "\n\nWarning! " << beetwo.getName() << " Has low power\n\n";
+    cout << astro.getName() << " Please restore B-2's power to sufficient levels\n\n";
 
-    // cout << "\nRegistered Robot: \n\n" << astro.name << "\n\nCurrent charge: \n\n" << astro.charge << "\n";
-    // cout << "\nRegistered Robot: \n\n" << beetwo.name << "\n\nCurrent charge: \n\n" << beetwo.charge << "\n";
+    while(beetwo.getCharge() < 50) {
+        astro.changeChargeBy(-10);
+        beetwo.changeChargeBy(10);
+    }
 
-    // cout << beetwo.name << " Has low power\n\n";
-    // cout << astro.name << " Please restore B-2's power to sufficient levels\n\n";
-
-    // while(beetwo.charge < 50) {
-    //     astro.charge -= 10;
-    //     beetwo.charge += 10;
-    // }
-
-    // cout << "sufficient charge detected in " << beetwo.name << "\n\n Charge: " << beetwo.charge << ".\n";
-    // cout << "Thank you, " << astro.name << ".\n"; 
+    cout << "sufficient charge detected in " << beetwo.getName() << " Charge: " << beetwo.getCharge() << ".\n";
+    cout << "\nThank you, " << astro.getName() << ".\n"; 
 
 
     string input;
@@ -148,6 +148,7 @@ int main () {
             }
             else if(input == "status") {
                 astro.status();
+                beetwo.status();
             }
             turns++;
         }
