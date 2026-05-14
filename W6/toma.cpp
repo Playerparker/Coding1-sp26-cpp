@@ -50,7 +50,7 @@ void readFile(vector<string>& vec, string path = "vector.txt") {
     file.close();
 }
 
-
+vector<string> names = {"Harry", "Barry", "Darry", "Larry"};
 
 // class for Tomas
 class baseToma {
@@ -63,45 +63,48 @@ private:
     int damage;
     //  Their hunger
     int hunger;
-    //  Their personality
-    string personality;
+    
 public:
     // Creating a Toma base
-    baseToma(string givName, int givHeal, int givDam, int givHun, string givPers) {
+    baseToma(string givName, int givHeal, int givDam, int givHun) {
         name = givName;
         health = givHeal;
         damage = givDam;
         hunger = givHun;
-        personality = givPers;
     }
     baseToma() {
-        name = "";
+        name = names[rand() % names.size()];
         health = rand() % 10 + 10;
         damage = rand() % 5 + 5;
         hunger = 0;
-        personality = "";
-    }
-    void opponentToma() {
-        string names;
-        name = names[rand() % names.size()];
-        health = rand() % 5 + 5;
-        damage = rand() % 6 + 4;
     }
     void hello() {
         cout << "Toma: " << name;
         cout << "\n Health: " << health;
         cout << "\n Damage: " << damage;
-        cout << "\n Personality: " << personality;
-        if(hunger > 5) {
-            cout << "\nI am hungry.\n";
-        }
-        else if(hunger == 10) {
+        if(hunger >= 10) {
             cout << "\nI am starving.\n";
+        }
+        else if(hunger >= 5) {
+            cout << "\nI am hungry.\n";
         }
         else {
             cout << "\nI am fine.\n";
         }
     }
+    
+    bool attack(baseToma& otherToma) {
+        otherToma.health -= damage;
+        cout << name << " attacks " << otherToma.name << "!\n";
+
+        if(otherToma.health <= 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     //setters
     void setName(string givName) {
         name = givName;
@@ -123,9 +126,7 @@ public:
             hunger = givHun;
         }
     }
-    void setPersonality(string givPers) {
-        personality = givPers;
-    }
+
     //getters
     string getName() {
         return name;
@@ -139,34 +140,45 @@ public:
     int getHunger() {
         return hunger;
     }
-    string getPersonality() {
-        return personality;
-    }
-
     void changeHungerBy(int amount) {
-        setHunger(hunger += amount);
+        setHunger(hunger + amount);
     }
     void changeStatsBy() {
-        setHealth(health += rand() % 3 + 1);
-        setDamage(damage += rand() % 3 + 1);
-        setHunger(hunger += 2);
+        setHealth(health + rand() % 3 + 1);
+        setDamage(damage + rand() % 3 + 1);
+        setHunger(hunger + 2);
     }
 
 };
 
-int main() {
-    srand(time(0));
-    string input;
+bool opponentTurn(baseToma& opponent, baseToma& pal) {
+        int roll = rand() % 100;
 
-    vector<string> names = {"Harry", "Barry", "Darry", "Larry"};
+        if(opponent.getHealth() <= 5 && rand() % 2 == 0) {
+            cout << "\n" << opponent.getName() << " fled!\n";
+            return true; 
+        }
+        else if(opponent.getHealth() <= 8 && roll < 40) {
+            cout << "\n" << opponent.getName() << " heals!\n";
+            opponent.setHealth(opponent.getHealth() + 2);
+        }
+        else {
+            if(opponent.attack(pal)) {
+                cout << "\n" << pal.getName() << " was defeated!\n";
+                return true;
+            }
+    }
+    return false;
+}
+
+int main() {
 
     readFile(names, "names.txt");
-
-    for(int i = 0; i < names.size(); i++) {
-        cout << names [i] << endl;
-    }
-
     writeFile(names, "names.txt");
+
+    
+    srand(time(0));
+    string input;
 
     // create a Toma
     baseToma pal;
@@ -174,7 +186,7 @@ int main() {
     pal.setHealth(15);
     pal.setDamage(6);
     pal.setHunger(2);
-    pal.setPersonality("Adventurous");
+
     //  display
     pal.hello();
 
@@ -184,6 +196,7 @@ int main() {
         cout << "\nFeed\n";
         cout << "\nChat\n";
         cout << "\nTrain\n";
+        cout << "\nRecover\n";
         cout << "\nBattle\n\n";
 
         getline(cin, input);
@@ -197,10 +210,100 @@ int main() {
             pal.changeHungerBy(-1); 
         }
         else if(input == "train") {
-            cout << "\nGet up and jam, and pump up the jam!\n";
-            pal.changeStatsBy();
+            if(pal.getHunger() >= 6) {
+                cout << "\nPal is too hungry to train!\n";
+            }  
+            else {
+                cout << "\nGet up and jam, and pump up the jam!\n";
+                pal.changeStatsBy();
+            }
         }
+        else if (input == "recover") {
+            cout << "\nHaving a niiice rest~\n";
+            pal.setHealth(pal.getHealth() + 5);
+            pal.changeHungerBy(+2);
+        }
+        else if(input == "battle") {
+             if(pal.getHunger() >= 10) {
+                cout << "\nPal is starving and can't fight!\n";
+            }
+            else {
+                cout << "\n\nChoose your opponnent!\n\n";
+                vector<baseToma> gang(6);
+                for(int i = 0; i < gang.size(); i++) {
+                    cout << i + 1 << ". ";
+                    gang[i].hello();
+                    cout << "\n";
+                }
+                getline(cin, input);
 
+                baseToma p1;
+                baseToma& opponent = p1;
+                bool opponentFound = false;
+                int choice = stoi(input);
+
+                if(choice >= 1 && choice <= gang.size()) {
+                    opponent = gang[choice - 1];
+                    opponentFound = true;
+                }
+                else {
+                    cout << "Invalid choice.\n";
+                }
+
+                bool palGoesFirst = (rand() % 2 == 0);
+                baseToma& fighterA = palGoesFirst ? pal : opponent;
+                baseToma& fighterB = palGoesFirst ? opponent : pal;
+
+                if(palGoesFirst){ 
+                    cout << "Pal goes first!\n";
+                }
+                else { 
+                    cout << opponent.getName() << " goes first!\n";
+                    if(opponentTurn(opponent, pal)) { 
+                        break;
+                    }  
+                }
+                while(fighterA.getHealth() > 0 && fighterB.getHealth() > 0) {
+                    cout << "\n--- " << pal.getName() << " ---\n";
+                    cout << "Health: " << pal.getHealth() << " | Damage: " << pal.getDamage() << "\n";
+                    cout << "\n--- " << opponent.getName() << " ---\n";
+                    cout << "Health: " << opponent.getHealth() << " | Damage: " << opponent.getDamage() << "\n";
+   
+                    cout << "\nattack / heal / flee\n";
+                    getline(cin, input);
+
+                    if(input == "attack") {
+                        if(pal.attack(opponent)) {
+                            cout << "\n" << opponent.getName() << " defeated!\n";
+                            break;
+                        }
+                        cout << "\nOpponents turn!\n";
+                        if(opponentTurn(opponent, pal)) { 
+                            break;
+                        }    
+                        pal.changeHungerBy(1);
+                    }
+                    else if(input == "heal") {
+                        pal.setHealth(pal.getHealth() + 2);
+                        if(opponentTurn(opponent, pal)) { 
+                            break;
+                        }   
+                    }
+                    else if(input == "flee") {
+                        cout << "You ran away!\n";
+                        break;
+                    }
+                    
+                }
+                if(pal.getHealth() <= 0) {
+                    cout << "Pal was defeated!\n";
+                }
+                if(pal.getHunger() >= 5) {
+                    cout << "Warning: Pal is hungry!\n";
+                }
+            }
+            
+        }
     }
 
     return 0;
